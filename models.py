@@ -222,9 +222,9 @@ def chatbot(chatbot_params):
     for index, row in params_df.iterrows():
       if index == "general":
           if mode =="debug":
-              print("chatbot: {}".format(general(text)))
+              print("chatbot: {}".format(general(text,10)))
           else:
-              generaltext=general(text).split("$")
+              generaltext=general(text,10).split("$")
               print("chatbot: {}".format(generaltext[0]))
       elif index=="advice":
         modelpath = "/content/CantoneseChatbot/pretrain-model/regression_advice/bestmodel"
@@ -266,5 +266,5 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="bertsum":
-        print("chatbot: {}".format(general(text)))
+        print("chatbot: {}".format(general(text,10)))
         break
