@@ -14,6 +14,7 @@ from simpletransformers.classification import ClassificationModel
 from transformers import BertTokenizer, BertForSequenceClassification
 # import sqlite3
 import re
+import matplotlib.pyplot as plt
 
 def regressionReply(post,model,candidate):
   model = ClassificationModel("bert", model )
@@ -213,6 +214,10 @@ def chatbot(chatbot_params):
   while True:
     text=input("input:")
     label=0
+    image = plt.imread('flyingPing.jpg')
+    plt.imshow(image)
+    plt.axis('off')
+    plt.show()
     for index, row in params_df.iterrows():
       if index == "general":
           if mode =="debug":
