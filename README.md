@@ -1,4 +1,4 @@
-1. Get everything from Github
+1. Get the required scripts from Github and data from Google Drive
 2. Open terminal and navigate to the desired file (for instance ```Regression```)
 	```
 	cd .…/models/Regression
