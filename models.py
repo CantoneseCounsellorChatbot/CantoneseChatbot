@@ -214,11 +214,11 @@ def chatbot(chatbot_params):
   while True:
     text=input("input:")
     label=0
-    plt.figure(dpi=20)
-    image = plt.imread('flyingPing.jpg')
-    plt.imshow(image)
-    plt.axis('off')
-    plt.show()
+#     plt.figure(dpi=20)
+#     image = plt.imread('flyingPing.jpg')
+#     plt.imshow(image)
+#     plt.axis('off')
+#     plt.show()
     for index, row in params_df.iterrows():
       if index == "general":
           if mode =="debug":
