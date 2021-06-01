@@ -1,5 +1,5 @@
 1. Get everything from Github
-2. Open terminal and navigate to the desired file (i.e. Regression)
+2. Open terminal and navigate to the desired file (for instance ```Regression```)
 	```
 	cd .…/models/Regression
 	```
