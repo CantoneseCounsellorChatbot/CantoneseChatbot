@@ -24,5 +24,6 @@
 
 4. Begin training by inputting the following into the terminal
 	 - For single-run training, input ```bash slurm/sample.sh```
-   
+
+5. The progress of training could be checked by ```cat out/regression0.out```
    
