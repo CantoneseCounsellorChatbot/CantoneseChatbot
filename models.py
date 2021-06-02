@@ -85,11 +85,12 @@ def regressionReply(post,model,candidate):
 '''
 
 
-def general(aa,max_tail_length):
+def general(aa):
+    max_tail_length=10
     def getQAlist():
         qaList = []
         exact_list=[]
-        conn = pd.read_csv("/content/drive/My Drive/chatbot/keyword_list.csv")
+        conn = pd.read_csv("/content/CantoneseChatbot/keyword_list.csv")
         exact_match = conn[conn.KeywordMatch=="no"]
         conn=conn[conn.KeywordMatch=="yes"]
         for index,row in exact_match.iterrows():
@@ -211,21 +212,23 @@ def chatbot(chatbot_params):
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
+  # print(params_df)
   while True:
     text=input("input:")
     label=0
-#     plt.figure(dpi=20)
-#     image = plt.imread('flyingPing.jpg')
-#     plt.imshow(image)
-#     plt.axis('off')
-#     plt.show()
+    plt.figure(dpi=20)
+    image = plt.imread('/content/CantoneseChatbot/flyingPig.jpg')
+    plt.imshow(image)
+    plt.axis('off')
+    plt.show()
     for index, row in params_df.iterrows():
       if index == "general":
           if mode =="debug":
-              print("chatbot: {}".format(general(text,max_tail_length=10)))
+              print("chatbot: {}".format(general(text)))
           else:
-              generaltext=general(text,max_tail_length=10).split("$")
+              generaltext=general(text).split("$")
               print("chatbot: {}".format(generaltext[0]))
+          break
       elif index=="advice":
         modelpath = "/content/CantoneseChatbot/pretrain-model/regression_advice/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/adviceall.csv"
