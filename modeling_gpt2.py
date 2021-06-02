@@ -351,8 +351,6 @@ class GPT2PreTrainedModel(PreTrainedModel):
             module.weight.data.fill_(1.0)
 
 
-
-[DOCS]
 @dataclass
 class GPT2DoubleHeadsModelOutput(ModelOutput):
     """
@@ -480,8 +478,6 @@ GPT2_INPUTS_DOCSTRING = r"""
 """
 
 
-
-[DOCS]
 @add_start_docstrings(
     "The bare GPT2 Model transformer outputting raw hidden-states without any specific head on top.",
     GPT2_START_DOCSTRING,
@@ -511,8 +507,7 @@ class GPT2Model(GPT2PreTrainedModel):
         for layer, heads in heads_to_prune.items():
             self.h[layer].attn.prune_heads(heads)
 
-
-[DOCS]
+    @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
     @add_code_sample_docstrings(
         tokenizer_class=_TOKENIZER_FOR_DOC,
         checkpoint="gpt2",
@@ -694,8 +689,6 @@ class GPT2Model(GPT2PreTrainedModel):
 
 
 
-
-[DOCS]
 @add_start_docstrings(
     """
     The GPT2 Model transformer with a language modeling head on top (linear layer with weights tied to the input
@@ -740,8 +733,6 @@ class GPT2LMHeadModel(GPT2PreTrainedModel):
             "attention_mask": attention_mask,
         }
 
-
-[DOCS]
     @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
     @add_code_sample_docstrings(
         tokenizer_class=_TOKENIZER_FOR_DOC,
@@ -825,8 +816,6 @@ class GPT2LMHeadModel(GPT2PreTrainedModel):
 
 
 
-
-[DOCS]
 @add_start_docstrings(
     """
 The GPT2 Model transformer with a language modeling and a multiple-choice classification head on top e.g. for
@@ -860,8 +849,6 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
             "use_cache": kwargs.get("use_cache"),
         }
 
-
-[DOCS]
     @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
     @replace_return_docstrings(output_type=GPT2DoubleHeadsModelOutput, config_class=_CONFIG_FOR_DOC)
     def forward(
@@ -987,8 +974,6 @@ class GPT2DoubleHeadsModel(GPT2PreTrainedModel):
 
 
 
-
-[DOCS]
 @add_start_docstrings(
     """
     The GPT2 Model transformer with a sequence classification head on top (linear layer).
@@ -1015,8 +1000,6 @@ class GPT2ForSequenceClassification(GPT2PreTrainedModel):
 
         self.init_weights()
 
-
-[DOCS]
     @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
     @add_code_sample_docstrings(
         tokenizer_class=_TOKENIZER_FOR_DOC,

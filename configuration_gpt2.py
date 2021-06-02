@@ -31,7 +31,7 @@ GPT2_PRETRAINED_CONFIG_ARCHIVE_MAP = {
 
 
 
-[DOCS]
+
 class GPT2Config(PretrainedConfig):
     """
     This is the configuration class to store the configuration of a :class:`~transformers.GPT2Model` or a
