@@ -10,7 +10,7 @@
    - For multiple runs (for instance when carrying out cross validation), use ```regression_slurm.sh```
 	```
 	#!/bin/bash
-	singularity exec --nv <pathname where you store the singularity images> python3 regressionSlurmFold.py \
+	singularity exec --nv <pathname where you store the singularity images>/simpletransformer.sig python3 regressionSlurmFold.py \
 	# the output path for models
 	--output_dir="out_models/finalversion05170" \
 	# The pretrained model path
