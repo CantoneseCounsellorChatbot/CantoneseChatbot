@@ -4,7 +4,7 @@
 	cd .…/models/Regression
 	```
 3. Adjust the parameters in either the .slurm/.sh files
-	 - For single-run training, use ```sample.sh``` under the ```slurm``` folder
+   - For single-run training, use ```sample.sh``` under the ```slurm``` folder
    - For multiple runs (for instance when carrying out cross validation), use ```regression_slurm.sh```
 	```
 	#!/bin/bash
@@ -22,8 +22,7 @@
 	--train_epochs=15 
 	```
 
-4. Begin training by inputting the following into the terminal
-	 - For single-run training, input ```bash slurm/sample.sh```
+4. Begin training by inputting `bash slurm/sample.sh` or `bash regression_slurm.sh` into the terminal
 
-5. The progress of training could be checked by ```cat out/regression0.out```
+5. The training progress could be checked from the output files in the `out/` folder, which is generated upon successful execution (for instance, use `cat out/regression0.out` to check the training progress of the regression model)
    
