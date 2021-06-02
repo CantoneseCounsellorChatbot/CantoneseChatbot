@@ -100,7 +100,7 @@ def general(aa,max_tail_length=10):
         
         for index,row in conn.iterrows():
           if row["Q"]!="*":
-            tmp = {"Q":""+row["Q"],"A":""+row["A"]}
+            tmp = {"Q":""+row["Q"].replace(" ",""),"A":""+row["A"].replace(" ","")}
             qaList.append(tmp)
           else:
             genreal_reply=row["A"].split("|")
@@ -120,15 +120,17 @@ def general(aa,max_tail_length=10):
 
     def analyzeSay(say, tmpList, general_reply,exactmatch):
         exact_df = pd.DataFrame(exactmatch)
+        # print(exact_df)
         for index,row in exact_df.iterrows():
-          if say in row["Q"].split("|"):
+          if say in row["Q"].replace(" ","").split("|"):
+            # print(row["Q"])
 
             return [0,row["A"].split("|")[0]]
   
         patterns = []
         for i in range(len(tmpList)):
             qa = tmpList[i]
-            qList = qa["Q"].split(" | ")
+            qList = qa["Q"].split("|")
             aList = qa["A"].split("|")            
             elizakeyword = []
             for j in range(len(qList)):
@@ -137,6 +139,7 @@ def general(aa,max_tail_length=10):
 
 
                 if say.find(qi) >-1:
+
 
 
                     elizakeyword.append(qi)
@@ -149,6 +152,7 @@ def general(aa,max_tail_length=10):
                     replacedTail = replacedTail.replace("#", "你")
                     tmpalist =aList[np.random.randint(len(aList))]
                     if tmpalist.find("*")>-1:
+
                       if len(replacedTail)<max_tail_length:
                         msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$",qi]
                         patterns.append(msg)
@@ -158,6 +162,7 @@ def general(aa,max_tail_length=10):
 
         if patterns==[]:
             patterns.append([say, general_reply[np.random.randint(len(general_reply))].replace("*", say)+"$"+"None"+"$"," "])
+
 
 
         return getRandomPattern(patterns)
@@ -197,7 +202,8 @@ def general(aa,max_tail_length=10):
             return say
     replya = answer(aa)
     return replya
-
+  
+  
 def chatbot(chatbot_params):
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
