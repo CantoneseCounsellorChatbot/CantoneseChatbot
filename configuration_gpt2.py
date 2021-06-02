@@ -15,8 +15,8 @@
 # limitations under the License.
 """ OpenAI GPT-2 configuration """
 
-from .configuration_utils import PretrainedConfig
-from .utils import logging
+from ...configuration_utils import PretrainedConfig
+from ...utils import logging
 
 
 logger = logging.get_logger(__name__)
@@ -28,8 +28,6 @@ GPT2_PRETRAINED_CONFIG_ARCHIVE_MAP = {
     "gpt2-xl": "https://huggingface.co/gpt2-xl/resolve/main/config.json",
     "distilgpt2": "https://huggingface.co/distilgpt2/resolve/main/config.json",
 }
-
-
 
 
 class GPT2Config(PretrainedConfig):
@@ -104,8 +102,12 @@ class GPT2Config(PretrainedConfig):
             and :class:`~transformers.TFGPT2DoubleHeadsModel`.
 
             The dropout ratio to be used after the projection and activation.
+        scale_attn_weights (:obj:`bool`, `optional`, defaults to :obj:`True`):
+            Scale attention weights by dividing by sqrt(hidden_size).
         gradient_checkpointing (:obj:`bool`, `optional`, defaults to :obj:`False`):
             Whether or not to use gradient checkpointing to save memory at the expense of slower backward pass.
+        use_cache (:obj:`bool`, `optional`, defaults to :obj:`True`):
+            Whether or not the model should return the last key/values attentions (not used by all models).
 
     Example::
 
@@ -122,6 +124,7 @@ class GPT2Config(PretrainedConfig):
     """
 
     model_type = "gpt2"
+    keys_to_ignore_at_inference = ["past_key_values"]
 
     def __init__(
         self,
@@ -143,9 +146,11 @@ class GPT2Config(PretrainedConfig):
         summary_activation=None,
         summary_proj_to_labels=True,
         summary_first_dropout=0.1,
+        scale_attn_weights=True,
+        gradient_checkpointing=False,
+        use_cache=True,
         bos_token_id=50256,
         eos_token_id=50256,
-        gradient_checkpointing=False,
         **kwargs
     ):
         super().__init__(bos_token_id=bos_token_id, eos_token_id=eos_token_id, **kwargs)
@@ -169,6 +174,8 @@ class GPT2Config(PretrainedConfig):
         self.summary_first_dropout = summary_first_dropout
         self.summary_proj_to_labels = summary_proj_to_labels
         self.gradient_checkpointing = gradient_checkpointing
+        self.scale_attn_weights = scale_attn_weights
+        self.use_cache = use_cache
 
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
