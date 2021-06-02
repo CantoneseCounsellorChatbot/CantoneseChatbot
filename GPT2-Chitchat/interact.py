@@ -109,7 +109,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
     return logits
 
 
-def main():
+def dialogpt(text,model_path):
     args = set_interact_args()
     logger = create_logger(args)
     # 当用户使用GPU,并且GPU可用时
@@ -118,60 +118,40 @@ def main():
     logger.info('using device:{}'.format(device))
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
     tokenizer = BertTokenizer(vocab_file=args.voca_path)
-    model = GPT2LMHeadModel.from_pretrained(args.dialogue_model_path)
+    model = GPT2LMHeadModel.from_pretrained(model_path)
     model.to(device)
     model.eval()
-    if args.save_samples_path:
-        if not os.path.exists(args.save_samples_path):
-            os.makedirs(args.save_samples_path)
-        samples_file = open(args.save_samples_path + '/samples.txt', 'a', encoding='utf8')
-        samples_file.write("聊天记录{}:\n".format(datetime.now()))
-        # 存储聊天记录，每个utterance以token的id的形式进行存储
+
     history = []
-    print('开始和chatbot聊天，输入CTRL + Z以退出')
+    history.append(tokenizer.encode(text))
+    input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
 
-    while True:
-        try:
-            text = input("user:")
-            if args.save_samples_path:
-                samples_file.write("user:{}\n".format(text))
-            history.append(tokenizer.encode(text))
-            input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
-
-            for history_id, history_utr in enumerate(history[-args.max_history_len:]):
-                input_ids.extend(history_utr)
-                input_ids.append(tokenizer.sep_token_id)
-            curr_input_tensor = torch.tensor(input_ids).long().to(device)
-            generated = []
-            # 最多生成max_len个token
-            for _ in range(args.max_len):
-                outputs = model(input_ids=curr_input_tensor)
-                next_token_logits = outputs[0][-1, :]
-                # 对于已生成的结果generated中的每个token添加一个重复惩罚项，降低其生成概率
-                for id in set(generated):
-                    next_token_logits[id] /= args.repetition_penalty
-                next_token_logits = next_token_logits / args.temperature
-                # 对于[UNK]的概率设为无穷小，也就是说模型的预测结果不可能是[UNK]这个token
-                next_token_logits[tokenizer.convert_tokens_to_ids('[UNK]')] = -float('Inf')
-                filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=args.topk, top_p=args.topp)
-                # torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标
-                next_token = torch.multinomial(F.softmax(filtered_logits, dim=-1), num_samples=1)
-                if next_token == tokenizer.sep_token_id:  # 遇到[SEP]则表明response生成结束
-                    break
-                generated.append(next_token.item())
-                curr_input_tensor = torch.cat((curr_input_tensor, next_token), dim=0)
-                # his_text = tokenizer.convert_ids_to_tokens(curr_input_tensor.tolist())
-                # print("his_text:{}".format(his_text))
-            history.append(generated)
-            text = tokenizer.convert_ids_to_tokens(generated)
-            print("chatbot:" + "".join(text))
-            if args.save_samples_path:
-                samples_file.write("chatbot:{}\n".format("".join(text)))
-        except KeyboardInterrupt:
-            if args.save_samples_path:
-                samples_file.close()
+    for history_id, history_utr in enumerate(history[-args.max_history_len:]):
+        input_ids.extend(history_utr)
+        input_ids.append(tokenizer.sep_token_id)
+    curr_input_tensor = torch.tensor(input_ids).long().to(device)
+    generated = []
+    # 最多生成max_len个token
+    for _ in range(args.max_len):
+        outputs = model(input_ids=curr_input_tensor)
+        next_token_logits = outputs[0][-1, :]
+        # 对于已生成的结果generated中的每个token添加一个重复惩罚项，降低其生成概率
+        for id in set(generated):
+            next_token_logits[id] /= args.repetition_penalty
+        next_token_logits = next_token_logits / args.temperature
+        # 对于[UNK]的概率设为无穷小，也就是说模型的预测结果不可能是[UNK]这个token
+        next_token_logits[tokenizer.convert_tokens_to_ids('[UNK]')] = -float('Inf')
+        filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=args.topk, top_p=args.topp)
+        # torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标
+        next_token = torch.multinomial(F.softmax(filtered_logits, dim=-1), num_samples=1)
+        if next_token == tokenizer.sep_token_id:  # 遇到[SEP]则表明response生成结束
             break
+        generated.append(next_token.item())
+        curr_input_tensor = torch.cat((curr_input_tensor, next_token), dim=0)
+        # his_text = tokenizer.convert_ids_to_tokens(curr_input_tensor.tolist())
+        # print("his_text:{}".format(his_text))
+    history.append(generated)
+    text = tokenizer.convert_ids_to_tokens(generated)
+    return text
 
 
-if __name__ == '__main__':
-    main()
