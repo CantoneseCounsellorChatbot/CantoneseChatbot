@@ -215,6 +215,7 @@ def general(aa,max_tail_length=10):
   
   
 def chatbot(chatbot_params):
+  chatbot_params["general"]["Threshold"]=1
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
@@ -303,9 +304,15 @@ def chatbot(chatbot_params):
         elif score > row["Threshold"]:
             print("chatbot: {}".format(reply))
             break
-      elif index=="bertsum":
+      elif index=="dialogpt":
+        score = np.random.rand()*20
         if mode =="debug": 
-            print("reply type:{}".format(index))
-        reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
-        print(reply)
+            print("reply type:{}".format(index))      
+            reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+            print(reply)
+            print(score)
+        else:
+            if score > row["Threshold"]:        
+                reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+                print(reply)
         break
