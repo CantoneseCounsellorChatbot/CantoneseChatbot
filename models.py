@@ -16,8 +16,17 @@ from transformers import BertTokenizer, BertForSequenceClassification
 import re
 import matplotlib.pyplot as plt
 
-def regressionReply(post,model,candidate):
-  model = ClassificationModel("bert", model )
+def greeting(text):
+    QAdf = pd.read_csv("/content/CantoneseChatbot/greeting.csv")
+    tmp=QAdf[QAdf.q==text]
+    if len(tmp)>0:
+        return tmp.sample(n=1).a.item()
+    return " "
+
+
+def regressionReply(post,model,candidate,silentmode=True):
+  arg={"silent":silentmode}
+  model = ClassificationModel("bert", model ,args=arg)
   data=pd.read_csv(candidate)
   advice_list = data.advice.drop_duplicates().to_list()      
   np.random.shuffle(advice_list)
@@ -220,16 +229,36 @@ def chatbot(chatbot_params):
     for index, row in params_df.iterrows():
       if index == "general":
           if mode =="debug":
+              print("reply type:{}".format(index))
               print("chatbot: {}".format(general(text)))
           else:
               generaltext=general(text).split("$")
               print("chatbot: {}".format(generaltext[0]))
           break
+      elif index == "greeting":
+          if mode =="debug":
+              print("reply type:{}".format(index))
+              generaltext=greeting(text)
+              if generaltext !=" ":
+                print("chatbot: {}".format(generaltext))
+                break
+              continue  
+          else:
+              generaltext=greeting(text)
+              if generaltext !=" ":
+                print("chatbot: {}".format(generaltext))
+                break
+              continue  
       elif index=="advice":
         modelpath = "/content/CantoneseChatbot/pretrain-model/regression_advice/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/adviceall.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
+            
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
               break
@@ -241,7 +270,11 @@ def chatbot(chatbot_params):
       elif index=="question":
         modelpath = "/content/CantoneseChatbot/pretrain-model/regression_question/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/question.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
@@ -254,7 +287,11 @@ def chatbot(chatbot_params):
       elif index=="restatement":
         modelpath = "/content/CantoneseChatbot/pretrain-model/regression_restatement/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/restatement.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
