@@ -513,7 +513,6 @@ class GPT2Model(GPT2PreTrainedModel):
 
 
 [DOCS]
-    @add_start_docstrings_to_model_forward(GPT2_INPUTS_DOCSTRING)
     @add_code_sample_docstrings(
         tokenizer_class=_TOKENIZER_FOR_DOC,
         checkpoint="gpt2",
