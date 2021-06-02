@@ -216,6 +216,7 @@ def general(aa,max_tail_length=10):
   
 def chatbot(chatbot_params):
   chatbot_params["general"]["Threshold"]=1
+  chatbot_params["greeting"]["Threshold"]=1
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
