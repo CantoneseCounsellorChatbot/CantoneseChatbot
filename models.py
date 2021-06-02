@@ -15,6 +15,7 @@ from transformers import BertTokenizer, BertForSequenceClassification
 # import sqlite3
 import re
 import matplotlib.pyplot as plt
+from GPT2-Chitchat.interact import dialogpt
 
 def greeting(text):
     QAdf = pd.read_csv("/content/CantoneseChatbot/greeting.csv")
@@ -217,9 +218,12 @@ def chatbot(chatbot_params):
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
+  
   # print(params_df)
   while True:
     text=input("input:")
+    reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+    print(reply)
     label=0
     plt.figure(dpi=10)
     image = plt.imread('/content/CantoneseChatbot/flyingPig.jpg')
