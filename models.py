@@ -85,8 +85,7 @@ def regressionReply(post,model,candidate):
 '''
 
 
-def general(aa):
-    max_tail_length=10
+def general(aa,max_tail_length=10):
     def getQAlist():
         qaList = []
         exact_list=[]
@@ -107,12 +106,8 @@ def general(aa):
             genreal_reply=row["A"].split("|")
         return exact_list,qaList,genreal_reply
 
-    def answer(say,seg):
-        if (say[0]=="你") and (say.find("唔")>0):
-            msg = handleSpecial(say,seg)
-            if msg !="":
-                return msg
-        return "@eliza@ " + getAnswer(say)
+    def answer(say):
+        return getAnswer(say)
     def getAnswer(say):
         exactmatch,tmpList,general_reply=getQAlist()
         results = analyzeSay(say, tmpList, general_reply,exactmatch)
@@ -125,8 +120,11 @@ def general(aa):
 
     def analyzeSay(say, tmpList, general_reply,exactmatch):
         exact_df = pd.DataFrame(exactmatch)
-        if say in exact_df.Q.to_list():
-          return exact_df[exact_df.Q==say].A.item()
+        for index,row in exact_df.iterrows():
+          if say in row["Q"].split("|"):
+
+            return [0,row["A"].split("|")[0]]
+  
         patterns = []
         for i in range(len(tmpList)):
             qa = tmpList[i]
@@ -152,32 +150,24 @@ def general(aa):
                     tmpalist =aList[np.random.randint(len(aList))]
                     if tmpalist.find("*")>-1:
                       if len(replacedTail)<max_tail_length:
-                        msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$"]
+                        msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$",qi]
                         patterns.append(msg)
                     else:
-                      msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$"]
+                      msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$",qi]
                       patterns.append(msg)
 
         if patterns==[]:
-            patterns.append([say, general_reply[np.random.randint(len(general_reply))].replace("*", say)+"$"+"None"+"$"])
+            patterns.append([say, general_reply[np.random.randint(len(general_reply))].replace("*", say)+"$"+"None"+"$"," "])
 
 
         return getRandomPattern(patterns)
 
-#             except:
-#                 print(i)
-
 
     def getRandomPattern(patterns):
-        return patterns[np.random.randint(len(patterns))]
-#     def getTail(say, q):
-#         print("lbk")
-#         r= re.compile(r"(.*){}([^?.;]*)".format(q))
-#         tmp = r.match(say)
-#         print(tmp)
-#         if tmp:
-#             return tmp[1]
-#         return ""
+        tmp = [len(x) for x in np.array(patterns)[:,2]]
+        tmpindex= np.argmax(tmp)
+        return patterns[tmpindex]
+
     def getTail(say, q):
         r= r"(.*)({})([^?.;]*)".format(q)
         tmp = re.findall(r,say)
@@ -205,8 +195,8 @@ def general(aa):
             return re.findall(r3,say)[0]
         else:
             return say
-    reply = answer(aa,aa)
-    return reply
+    replya = answer(aa)
+    return replya
 
 def chatbot(chatbot_params):
   params_df=pd.DataFrame(chatbot_params).T
