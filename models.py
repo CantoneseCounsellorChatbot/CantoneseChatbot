@@ -222,8 +222,6 @@ def chatbot(chatbot_params):
   # print(params_df)
   while True:
     text=input("input:")
-    reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
-    print(reply)
     label=0
     plt.figure(dpi=10)
     image = plt.imread('/content/CantoneseChatbot/flyingPig.jpg')
@@ -306,5 +304,8 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="bertsum":
-        print("chatbot: {}".format(general(text,10)))
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+        reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+        print(reply)
         break
