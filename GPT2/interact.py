@@ -126,6 +126,7 @@ def dialogpt(text,model_path):
     history = []
     history.append(tokenizer.encode(text))
     input_ids = [tokenizer.cls_token_id]  # 每个input以[CLS]为开头
+    score = np.random.rand()*20
 
     for history_id, history_utr in enumerate(history[-args.max_history_len:]):
         input_ids.extend(history_utr)
@@ -153,6 +154,6 @@ def dialogpt(text,model_path):
         # print("his_text:{}".format(his_text))
     history.append(generated)
     text = tokenizer.convert_ids_to_tokens(generated)
-    return "".join(text)
+    return "".join(text), score
 
 

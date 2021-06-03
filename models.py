@@ -306,10 +306,10 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="dialogpt":
-        score = np.random.rand()*20
+        
         if mode =="debug": 
             print("reply type:{}".format(index))      
-            reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+            reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
             print(reply)
             print(score)
             if score > row["Threshold"]:
@@ -318,6 +318,7 @@ def chatbot(chatbot_params):
                 continue
 
         else:
+            reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
             if score > row["Threshold"]:        
                 reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
                 print(reply)
