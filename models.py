@@ -321,7 +321,7 @@ def chatbot(chatbot_params):
         else:
             reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
             if score > row["Threshold"]:        
-                reply = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+                reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
                 print(reply)
                 break
             else:
