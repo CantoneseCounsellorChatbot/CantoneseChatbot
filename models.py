@@ -217,7 +217,6 @@ def general(aa,max_tail_length=10):
 def chatbot(chatbot_params):
   print("你好，我係菠蘿仔！我係個專門幫手舒緩考試壓力既輔導員！你有冇咩想同我傾下？")
   chatbot_params["general"]["Threshold"]=1
-  chatbot_params["greeting"]["Threshold"]=1
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
