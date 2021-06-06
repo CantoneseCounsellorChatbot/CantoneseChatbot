@@ -235,7 +235,7 @@ def chatbot(chatbot_params):
     plt.imshow(image)
     plt.axis('off')
     plt.show()
-    for index, row in params_df.iterrows():
+    for index, row in tqdm(params_df.iterrows()):
       if index == "general":
           if mode =="debug":
               print("reply type:{}".format(index))
