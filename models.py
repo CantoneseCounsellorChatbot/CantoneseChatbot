@@ -15,7 +15,8 @@ from transformers import BertTokenizer, BertForSequenceClassification
 # import sqlite3
 import re
 import matplotlib.pyplot as plt
-from GPT2.interact import dialogpt
+# from GPT2.interact import dialogpt
+from GPT2.interact_mmi import dialogptMMI
 
 def greeting(text):
     QAdf = pd.read_csv("/content/CantoneseChatbot/greeting.csv")
@@ -314,7 +315,7 @@ def chatbot(chatbot_params):
         
         if mode =="debug": 
             print("reply type:{}".format(index))      
-            reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+            reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
             print(reply)
             print(score)
             if score > row["Threshold"]:
@@ -323,9 +324,9 @@ def chatbot(chatbot_params):
                 continue
 
         else:
-            reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+            reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
             if score > row["Threshold"]:        
-                reply, score = dialogpt(text,'/content/CantoneseChatbot/GPT_restatement')
+                reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
                 print(reply)
                 break
             else:
