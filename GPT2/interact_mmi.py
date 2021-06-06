@@ -49,11 +49,12 @@ def set_interact_args():
                         help="重复惩罚参数，若生成的对话重复性较高，可适当提高该参数")
     parser.add_argument('--seed', type=int, default=None, help='设置种子用于生成随机数，以使得训练的结果是确定的')
     parser.add_argument('--max_len', type=int, default=25, help='每个utterance的最大长度,超过指定长度则进行截断')
-    parser.add_argument('--max_history_len', type=int, default=5, help="dialogue history的最大长度")
+    parser.add_argument('--max_history_len', type=int, default=1, help="dialogue history的最大长度")
     parser.add_argument('--no_cuda', action='store_true', help='不使用GPU进行预测')
     parser.add_argument('--batch_size', type=int, default=5, help='批量生成response，然后经过MMI模型进行筛选')
     parser.add_argument('--debug', action='store_true', help='指定该参数，可以查看生成的所有候选的reponse，及其loss')
-    return parser.parse_args()
+    args = parser.parse_args(args=['--device','0'])
+    return args
 
 
 def create_logger(args):
@@ -96,7 +97,8 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
         # Remove all tokens with a probability less than the last token of the top-k
         # torch.topk()返回最后一维最大的top_k个元素，返回值为二维(values,indices)
         # ...表示其他维度由计算机自行推断
-        for logit in logits:
+        for ttt in range(logits.size(0)):
+            logit = logits[ttt]
             indices_to_remove = logit < torch.topk(logit, top_k)[0][..., -1, None]
             logit[indices_to_remove] = filter_value  # 对于topk之外的其他元素的logits值设为负无穷
 
@@ -123,11 +125,11 @@ def dialogptMMI(text,model_path,mmi_model_path):
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
     tokenizer = BertTokenizer(vocab_file=args.voca_path)
     # 对话model
-    dialogue_model = GPT2LMHeadModel.from_pretrained(args.dialogue_model_path)
+    dialogue_model = GPT2LMHeadModel.from_pretrained(model_path)
     dialogue_model.to(device)
     dialogue_model.eval()
     # 互信息mmi model
-    mmi_model = GPT2LMHeadModel.from_pretrained(args.mmi_model_path)
+    mmi_model = GPT2LMHeadModel.from_pretrained(mmi_model_path)
     mmi_model.to(device)
     mmi_model.eval()
     history = []
@@ -152,7 +154,8 @@ def dialogptMMI(text,model_path,mmi_model_path):
                 next_token_logits[index][token_id] /= args.repetition_penalty
         next_token_logits = next_token_logits / args.temperature
         # 对于[UNK]的概率设为无穷小，也就是说模型的预测结果不可能是[UNK]这个token
-        for next_token_logit in next_token_logits:
+        for iii in range(next_token_logits.size(0)):
+            next_token_logit= next_token_logits[iii]
             next_token_logit[tokenizer.convert_tokens_to_ids('[UNK]')] = -float('Inf')
         filtered_logits = top_k_top_p_filtering(next_token_logits, top_k=args.topk, top_p=args.topp)
         # torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标
