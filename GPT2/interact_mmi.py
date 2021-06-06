@@ -208,7 +208,7 @@ def dialogptMMI(text,model_path,mmi_model_path):
             min_loss = loss
     history.append(best_response)
     text = tokenizer.convert_ids_to_tokens(best_response)
-    return "".join(text), min_loss/20.0
+    return "".join(text), min_loss/10.0
 
 
 
