@@ -199,7 +199,7 @@ def general(aa,max_tail_length=10):
             return say
         r1=r"[{}\s](.*?{}.*?)[{}\s]".format(tmppunc,keyword,tmppunc)
         r2=r"[{}\s]*(.*?{}.*?)[{}\s]".format(tmppunc,keyword,tmppunc)
-        r3=r"[{}\s](.*?{}.*?)[{}\s]*".format(tmppunc,keyword,tmppunc)
+        r3=r"[{}\s](.*?{}.*)[{}\s]*".format(tmppunc,keyword,tmppunc)
         if re.findall(r1,say) !=[]:
 
             return re.findall(r1,say)[0]
