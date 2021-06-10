@@ -260,7 +260,7 @@ def chatbot(chatbot_params):
                 break
               continue  
       elif index=="advice":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_advice/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_advice/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/adviceall.csv"
         if mode =="debug": 
             print("reply type:{}".format(index))
@@ -278,7 +278,7 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="question":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_question/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_question/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/question.csv"
         if mode =="debug": 
             print("reply type:{}".format(index))
@@ -295,7 +295,7 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="restatement":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_restatement/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_restatement/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/restatement.csv"
         if mode =="debug": 
             print("reply type:{}".format(index))
