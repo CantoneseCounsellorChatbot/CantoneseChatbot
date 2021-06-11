@@ -63,7 +63,7 @@ output_list = ['regression_advice.zip',
 for i in range(len(id_list)):
     if os.path.exists(output_list[i]):
         continue
-    tmp = "wget --load-cookies /tmp/cookies.txt \"https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={}}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id={}\" -O {}".format(id_list[i],id_list[i],output_list[i])
+    tmp = "wget --load-cookies /tmp/cookies.txt \"https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id={}\" -O {}".format(id_list[i],id_list[i],output_list[i])
     os.system(tmp)
     if os.path.getsize(output_list[i]) < 31230:
         os.remove(output_list[i])
