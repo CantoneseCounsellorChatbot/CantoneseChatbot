@@ -62,6 +62,7 @@ output_list = ['regression_advice.zip',
                 "dialogpt_mmi.zip"]
 for i in range(len(id_list)):
     if os.path.exists(output_list[i]):
+        unzip(output_list[i],"/content/CantoneseChatbot/")
         continue
     tmp = "wget --load-cookies /tmp/cookies.txt \"https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id={}\" -O {}".format(id_list[i],id_list[i],output_list[i])
     os.system(tmp)
