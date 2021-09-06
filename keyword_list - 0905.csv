@@ -4,33 +4,40 @@ Q,A,Type,KeywordMatch
 bye | Bye | 再見 | 拜拜 | 下次再傾 | 下次再講 | 88,得閒再搵我啦，拜拜,common expression / reply to common expressions,yes
 你係邊個 | 你叫咩名,我叫做菠蘿仔，最鐘意就係同人傾計,chitchat question / reply to chitchat question,yes
 建議,唔好意思 我要再知多少少先決定到,advice request,yes
-難過 | 唔開心 | 傷心,事情總會解決既 | 我哋一齊諗吓有咩方法可以令你開心啲吖？,encourager,yes
-嘈交 | 嗌交 | 吵架 | 爭執 | 鬧交,可唔可以詳情d講下你地點解嘈交？,encourager,yes
+難過 | 唔開心 | 傷心,事情總會解決嘅，不如你講下係咩令你感到難過吖？ | 我哋一齊諗吓有咩方法可以令你開心啲吖？,encourager,yes
+好的 | 好嘅 | 好呀 | 好啊 | 好喎,咁就好嘞 | ok | 好吖,encourager,yes
+試下 | 試吓,加油呀💪 | 我會為你打氣！ ,encourager,yes
+嘈交 | 嗌交 | 吵架 | 爭執 | 鬧交,可唔可以詳細啲講下你哋點解嘈交？| 點解你哋會鬧交嘅？ | 你哋因為啲咩發生爭執呀？,encourager,yes
 壓力 | 驚,你依家吸口氣 放鬆番個人先 詳細d解釋比我知個原因係咩？|我明你既感受,encourager,yes
-謝謝 | thx | thanks | thank you | 唔該曬,唔洗客氣!,common expression / reply to common expressions,yes
+謝謝 | thx | thanks | thank you | 唔該 | 多謝,唔洗客氣!,common expression / reply to common expressions,yes
+辛苦你 | 辛苦曬 | 辛苦晒,唔辛苦～,common expression / reply to common expressions,yes
 對不起 | 抱歉 | 不好意思 | 唔好意思,唔緊要,common expression / reply to common expressions,yes
 可否 | 可不可以 | 可唔可以,你點解想*?,encourager,yes
 你是 | 你係 | 你係咪 | 你係唔係,點解你認為我係*?,encourager,yes
-怎麼辦 | 點算 | 怎辦好,先慢慢吸一口氣，再冷靜咁諗清楚,encourager,yes
+怎麼辦 | 點算 | 怎辦好,我哋一齊搵下有咩方法幫你吖 | 先慢慢吸一口氣，再冷靜咁諗清楚,encourager,yes
 感覺 | 覺得,點解有咁既感覺?,encourager,yes
 是否 | 係咪 | 係唔係,咁你覺得係咪*?,encourager,yes
-不能 | 唔得 | 做唔到 | 唔可以,點解唔得？|你已經試過?|可能下次可以呢?,encourager,yes
-甚麼 | 什麼 | 咩野 | 何時 | 幾時 | 誰 | 邊個 | 哪裡 | 邊度 | 如何 | 點樣 | 為何 | 因何 | 點解,點解咁問?|點解想知?|你認為係點呢?|你認為點呢?|你真係想知?|有冇問下其他人?,encourager,yes
+不能 | 唔得 | 唔可以,點解唔得？|你已經試過?|可能下次可以呢?,encourager,yes
+做唔到 | 好難做,點解做唔到？ | 你有冇試過做呀？ ,encourager,yes
+甚麼 | 什麼 | 咩野 | 何時 | 幾時 | 誰 | 邊個 | 哪裡 | 邊度 | 如何 | 點樣 | 為何 | 因何 | 點解,點解咁問?|點解想知?|你認為係點呢?|你認為呢?|你覺得呢?|有冇試過問其他人?,encourager,yes
 原因 | 因為,依個係真正既原因?|仲有冇其他原因?|會唔會仲有其他原因?,encourager,yes
 或許 | 或者,嗯......,encourager,yes
+冇喇｜冇嘅｜冇呀,明白 | 好嘅,encourager,yes
 不曉得 | 不知道 | 唔知道,點解會唔知嘅?|再諗下有冇其他可能性?,encourager,yes
 不想 | 不希望 | 唔想 | 唔希望,有冇咩辦法呢?|點解唔想*呢?|咁你希望點呢?,encourager,yes
 想 | 希望,點解會想嘅?,encourager,yes
-總是 | 常常 | 總係 | 成日,可唔可以具體解釋下?|成日都係咁樣?|真係成日咁？,encourager,yes
+總是 | 常常 | 總係 | 成日,可唔可以具體解釋下?|成日都係咁樣?|真係次次都係咁？,encourager,yes
 像 | 似,可唔可以再講得詳細D?,encourager,yes
 我想傾下,好啊 菠蘿仔最鐘意同人傾,encourager,yes
 對 | 岩 | 係,嗯嗯,encourager,yes
 朋友 | friend | fd,講多少少依個朋友既野比我聽？|你識左個朋友幾耐?,encourager,yes
+冇朋友 | 冇fd | 冇friend | 孤獨 | 無朋友 | 無fd | 無friend,感受到你嘅孤單😢介唔介意講多少少你嘅感受？,encourager,yes
 我決定 | 我已經決定,真係決定左既話就去做啦!|我支持你!,encourager,yes
-是阿 | 是的 | 係啊 | 係ㄚ,有冇咩我可以幫到手?|我希望我可以幫到你手!,encourager,yes
+是阿 | 是的 | 係啊 | 係ㄚ | 係呀,明白 | 原來如此 | 原來係咁 | 知道,encourager,yes
+唔開心 | 壓力 | 辛苦 | 驚 | 怕 | 擔心,有冇咩我可以幫到手?|我希望我可以幫到你手!,encourager,yes
 請你,我要點樣*?|你想要我*嗎?,encourager,yes
-不 | 唔,點解?,encourager,yes
-*,請繼續講|係嘅|嗯，我聽緊|嗯嗯|原來係咁|原來如此|哦～|我聽緊呀，你繼續吖|你介唔介意再講多啲俾我聽？|你可唔可以再講詳細少少，等我睇下可以點幫你？|你介唔介意分享多啲呢？|然後呢？|仲有呢？|之後呢？｜可唔可以分享多啲俾我聽？|可唔可以講得詳細少少？|跟住呢？|點解會咁嘅？,encourager,yes
+*,請繼續講|係嘅|嗯，我聽緊|嗯嗯|原來係咁|原來如此|哦～|我聽緊呀，你繼續吖|你介唔介意再講多啲俾我聽？|你可唔可以再講詳細少少，等我睇下可以點幫你？|你介唔介意分享多啲呢？|然後呢？|仲有呢？|之後呢？｜可唔可以分享多啲俾我聽？|可唔可以講得詳細少少？|跟住呢？|點解嘅？,encourager,yes
+*？ | *?,你想知道*？,encourager,yes
 你叫咩名？ | 點稱呼你 | 名字？ | 我應該點嗌你？ | 請問點稱呼你？,我係菠蘿仔！,chitchat question / reply to chitchat question,no
 今日好開心啊！,你心情唔錯喎，同菠蘿仔分享吓？,chitchat question / reply to chitchat question,no
 你今年幾歲？,我二十歲啦！,chitchat question / reply to chitchat question,no
