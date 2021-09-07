@@ -15,9 +15,20 @@ from transformers import BertTokenizer, BertForSequenceClassification
 # import sqlite3
 import re
 import matplotlib.pyplot as plt
+# from GPT2.interact import dialogpt
+from GPT2.interact_mmi import dialogptMMI
 
-def regressionReply(post,model,candidate):
-  model = ClassificationModel("bert", model )
+def greeting(text):
+    QAdf = pd.read_csv("/content/CantoneseChatbot/greeting.csv")
+    tmp=QAdf[QAdf.q==text]
+    if len(tmp)>0:
+        return tmp.sample(n=1).a.item()
+    return " "
+
+
+def regressionReply(post,model,candidate,silentmode=True):
+  arg={"silent":silentmode}
+  model = ClassificationModel("bert", model ,args=arg)
   data=pd.read_csv(candidate)
   advice_list = data.advice.drop_duplicates().to_list()      
   np.random.shuffle(advice_list)
@@ -85,11 +96,11 @@ def regressionReply(post,model,candidate):
 '''
 
 
-def general(aa,max_tail_length):
+def general(aa,max_tail_length=10):
     def getQAlist():
         qaList = []
         exact_list=[]
-        conn = pd.read_csv("/content/drive/My Drive/chatbot/keyword_list.csv")
+        conn = pd.read_csv("/content/CantoneseChatbot/keyword_list.csv")
         exact_match = conn[conn.KeywordMatch=="no"]
         conn=conn[conn.KeywordMatch=="yes"]
         for index,row in exact_match.iterrows():
@@ -100,18 +111,14 @@ def general(aa,max_tail_length):
         
         for index,row in conn.iterrows():
           if row["Q"]!="*":
-            tmp = {"Q":""+row["Q"],"A":""+row["A"]}
+            tmp = {"Q":""+row["Q"].replace(" ",""),"A":""+row["A"].replace(" ","")}
             qaList.append(tmp)
           else:
             genreal_reply=row["A"].split("|")
         return exact_list,qaList,genreal_reply
 
-    def answer(say,seg):
-        if (say[0]=="你") and (say.find("唔")>0):
-            msg = handleSpecial(say,seg)
-            if msg !="":
-                return msg
-        return "@eliza@ " + getAnswer(say)
+    def answer(say):
+        return getAnswer(say)
     def getAnswer(say):
         exactmatch,tmpList,general_reply=getQAlist()
         results = analyzeSay(say, tmpList, general_reply,exactmatch)
@@ -124,12 +131,17 @@ def general(aa,max_tail_length):
 
     def analyzeSay(say, tmpList, general_reply,exactmatch):
         exact_df = pd.DataFrame(exactmatch)
-        if say in exact_df.Q.to_list():
-          return exact_df[exact_df.Q==say].A.item()
+        # print(exact_df)
+        for index,row in exact_df.iterrows():
+          if say in row["Q"].replace(" ","").split("|"):
+            # print(row["Q"])
+
+            return [0,row["A"].split("|")[0]]
+  
         patterns = []
         for i in range(len(tmpList)):
             qa = tmpList[i]
-            qList = qa["Q"].split(" | ")
+            qList = qa["Q"].split("|")
             aList = qa["A"].split("|")            
             elizakeyword = []
             for j in range(len(qList)):
@@ -138,6 +150,7 @@ def general(aa,max_tail_length):
 
 
                 if say.find(qi) >-1:
+
 
 
                     elizakeyword.append(qi)
@@ -150,33 +163,27 @@ def general(aa,max_tail_length):
                     replacedTail = replacedTail.replace("#", "你")
                     tmpalist =aList[np.random.randint(len(aList))]
                     if tmpalist.find("*")>-1:
+
                       if len(replacedTail)<max_tail_length:
-                        msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$"]
+                        msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$",qi]
                         patterns.append(msg)
                     else:
-                      msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$"]
+                      msg = [tail, tmpalist.replace("*", replacedTail)+"$"+qi+"$",qi]
                       patterns.append(msg)
 
         if patterns==[]:
-            patterns.append([say, general_reply[np.random.randint(len(general_reply))].replace("*", say)+"$"+"None"+"$"])
+            patterns.append([say, general_reply[np.random.randint(len(general_reply))].replace("*", say)+"$"+"None"+"$"," "])
+
 
 
         return getRandomPattern(patterns)
 
-#             except:
-#                 print(i)
-
 
     def getRandomPattern(patterns):
-        return patterns[np.random.randint(len(patterns))]
-#     def getTail(say, q):
-#         print("lbk")
-#         r= re.compile(r"(.*){}([^?.;]*)".format(q))
-#         tmp = r.match(say)
-#         print(tmp)
-#         if tmp:
-#             return tmp[1]
-#         return ""
+        tmp = [len(x) for x in np.array(patterns)[:,2]]
+        tmpindex= np.argmax(tmp)
+        return patterns[tmpindex]
+
     def getTail(say, q):
         r= r"(.*)({})([^?.;]*)".format(q)
         tmp = re.findall(r,say)
@@ -192,7 +199,7 @@ def general(aa,max_tail_length):
             return say
         r1=r"[{}\s](.*?{}.*?)[{}\s]".format(tmppunc,keyword,tmppunc)
         r2=r"[{}\s]*(.*?{}.*?)[{}\s]".format(tmppunc,keyword,tmppunc)
-        r3=r"[{}\s](.*?{}.*?)[{}\s]*".format(tmppunc,keyword,tmppunc)
+        r3=r"[{}\s](.*?{}.*)[{}\s]*".format(tmppunc,keyword,tmppunc)
         if re.findall(r1,say) !=[]:
 
             return re.findall(r1,say)[0]
@@ -204,33 +211,64 @@ def general(aa,max_tail_length):
             return re.findall(r3,say)[0]
         else:
             return say
-    reply = answer(aa,aa)
-    return reply
-
+    replya = answer(aa)
+    return replya
+  
+  
 def chatbot(chatbot_params):
+  plt.figure(dpi=10)
+  image = plt.imread('/content/CantoneseChatbot/flyingPig.jpg')
+  plt.imshow(image)
+  plt.axis('off')
+  plt.show()
+  print("你好，我係菠蘿仔！我係個專門幫手舒緩壓力既輔導員！你有冇咩想同我傾下？")
+  chatbot_params["general"]["Threshold"]=1
   params_df=pd.DataFrame(chatbot_params).T
   mode = params_df[params_df.index=="mode"].order.item()
   params_df = params_df[params_df.index!="mode"].sort_values(by=["order"])
+  
+  # print(params_df)
   while True:
     text=input("input:")
     label=0
-#     plt.figure(dpi=20)
-#     image = plt.imread('flyingPing.jpg')
-#     plt.imshow(image)
-#     plt.axis('off')
-#     plt.show()
-    for index, row in params_df.iterrows():
+    plt.figure(dpi=10)
+    image = plt.imread('/content/CantoneseChatbot/flyingPig.jpg')
+    plt.imshow(image)
+    plt.axis('off')
+    plt.show()
+    for index, row in tqdm(params_df.iterrows()):
       if index == "general":
           if mode =="debug":
-              print("chatbot: {}".format(general(text,max_tail_length=10)))
+              print("reply type:{}".format(index))
+              print("chatbot: {}".format(general(text)))
           else:
-              generaltext=general(text,max_tail_length=10).split("$")
+              generaltext=general(text).split("$")
               print("chatbot: {}".format(generaltext[0]))
+          break
+      elif index == "greeting":
+          if mode =="debug":
+              print("reply type:{}".format(index))
+              generaltext=greeting(text)
+              if generaltext !=" ":
+                print("chatbot: {}".format(generaltext))
+                break
+              continue  
+          else:
+              generaltext=greeting(text)
+              if generaltext !=" ":
+                print("chatbot: {}".format(generaltext))
+                break
+              continue  
       elif index=="advice":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_advice/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_advice/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/adviceall.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
+            
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
               break
@@ -240,9 +278,13 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="question":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_question/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_question/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/question.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
@@ -253,9 +295,13 @@ def chatbot(chatbot_params):
             print("chatbot: {}".format(reply))
             break
       elif index=="restatement":
-        modelpath = "/content/CantoneseChatbot/pretrain-model/regression_restatement/bestmodel"
+        modelpath = "/content/CantoneseChatbot/regression_restatement/bestmodel"
         advicepath= "/content/CantoneseChatbot/candidate/restatement.csv"
-        reply, score = regressionReply(text,modelpath,advicepath)
+        if mode =="debug": 
+            print("reply type:{}".format(index))
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=False)
+        else:
+            reply, score = regressionReply(text,modelpath,advicepath,silentmode=True)
         if mode =="debug":
             print("chatbot: {}\nscore:{}".format(reply,score))
             if score > row["Threshold"]:
@@ -265,6 +311,23 @@ def chatbot(chatbot_params):
         elif score > row["Threshold"]:
             print("chatbot: {}".format(reply))
             break
-      elif index=="bertsum":
-        print("chatbot: {}".format(general(text,10)))
-        break
+      elif index=="dialogpt":
+        
+        if mode =="debug": 
+            print("reply type:{}".format(index))      
+            reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
+            print(reply)
+            print(score)
+            if score > row["Threshold"]:
+                break
+            else:
+                continue
+
+        else:
+            reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
+            if score > row["Threshold"]:        
+                reply, score = dialogptMMI(text,'/content/CantoneseChatbot/GPT_restatement',"/content/CantoneseChatbot/restatement_mmi")
+                print(reply)
+                break
+            else:
+                continue
